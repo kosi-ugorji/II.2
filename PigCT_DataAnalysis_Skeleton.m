@@ -106,7 +106,7 @@ ylabel = [];
 % Set the remaining axes properties
 set(axes1,'DataAspectRatio',[1 1 1]);
 
-%%
+%% Displaying patella
 
 
 xp = mesh_x(:,:,slice).*patella_whole;
@@ -130,3 +130,28 @@ writematrix( points,"patella_points.txt", 'delimiter', '\t')
 
 
 
+%% Displaying Segmentation Workflow
+raw_ct = imread("raw_ct1.png");
+bone_iso = imread("bone_iso_1.png");
+mask = imread("threshed_bone.png");
+bone_3d = imread("bone_3d_1.png");
+
+img1  = imresize(raw_ct, [500 500]);
+img2  = imresize(bone_iso, [500 500]);
+img3  = imresize(mask, [500 500]);
+img4  = imresize(bone_3d, [500 500]);
+
+figure()
+subplot(1,4,1)
+imshow(img1)
+
+
+subplot(1,4,2)
+imshow(img2)
+
+subplot(1,4,3)
+imshow(img3)
+
+
+subplot(1,4,4)
+imshow(img4)
