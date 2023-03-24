@@ -31,7 +31,7 @@ clear; clc; close all;
     for n = 1:length(filenames)
         IM(:,:,n) = dicomread(strcat(pwd, Slash, filenames{1,n}));
         IM_mask(:,:,n) = IM(:,:,n) > thresh;
-        IM_overlay(:,:,n,:) = imoverlay(IM(:,:,n),IM_mask(:,:,n), 'green');
+        IM_overlay(:,:,n,:) = imoverlay(IM(:,:,n).*3000,IM_mask(:,:,n), 'green');
         B = bwboundaries(IM_mask(:,:,n), 8, 'noholes');
         patella = IM_mask(:,:,n);
         [labeledImage, ~] = bwlabel(patella, 4);
@@ -71,6 +71,8 @@ clear; clc; close all;
     slice = 50:140;
     patella_whole = patella_whole(:,:,slice);
     sliceViewer(patella_whole, 'SliceNumber', 1);
+
+
 %%
 % Use the pixel dimensions listed in the DICOM metadata to convert the 
 % pixel index locations into physical coordinates in x, y, and z.
@@ -89,10 +91,20 @@ X = mesh_x.*IM_mask;
 Y = mesh_y.*IM_mask; 
 Z  = mesh_z.*IM_mask; 
 
-figure(6)
+figure1 = figure(6);
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
 scatter3(X(:), Y(:), Z(:) ,'.', 'MarkerEdgeColor', [227/255, 218/255, 201/255])
 title("3d point Cloud of Bone")
-axis equal
+view(axes1,[-131.221351883879 22.7894891409754]);
+grid(axes1,'off');
+axis(axes1,'tight');
+hold(axes1,'off');
+xlabel = [];
+ylabel = [];
+
+% Set the remaining axes properties
+set(axes1,'DataAspectRatio',[1 1 1]);
 
 %%
 
@@ -115,5 +127,6 @@ zshp = shp_points(:,3);
 
 points = [xshp, yshp, zshp];
 writematrix( points,"patella_points.txt", 'delimiter', '\t')
+
 
 
